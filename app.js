@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggle = document.getElementById('themeToggle');
   const moonIcon = document.getElementById('moonIcon');
   const sunIcon = document.getElementById('sunIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  const metaThemeColor = document.getElementById('metaThemeColor');
   const searchInput = document.getElementById('searchInput');
   const clearSearch = document.getElementById('clearSearch');
   const filterPills = document.querySelectorAll('.pill');
@@ -11,33 +13,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const toast = document.getElementById('toast');
   const copyButtons = document.querySelectorAll('.copy-btn');
 
-  // Theme Management
+  // Theme Management (Default Terang per instruksi)
   const getPreferredTheme = () => {
     const saved = localStorage.getItem('selayar_bisa_theme');
-    if (saved) return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Jika belum pernah dipilih, default mutlak adalah 'light' (tema terang)
+    return saved === 'dark' ? 'dark' : 'light';
   };
 
   const applyTheme = (theme) => {
-    if (theme === 'dark') {
+    const isDark = (theme === 'dark');
+    if (isDark) {
       document.documentElement.setAttribute('data-theme', 'dark');
-      moonIcon.classList.add('hidden');
-      sunIcon.classList.remove('hidden');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
       sunIcon.classList.add('hidden');
       moonIcon.classList.remove('hidden');
+      if (themeLabel) themeLabel.textContent = 'Gelap';
+      if (themeToggle) themeToggle.title = 'Mode: Gelap (Klik untuk ganti Terang)';
+      if (metaThemeColor) metaThemeColor.setAttribute('content', '#090d16');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      moonIcon.classList.add('hidden');
+      sunIcon.classList.remove('hidden');
+      if (themeLabel) themeLabel.textContent = 'Terang';
+      if (themeToggle) themeToggle.title = 'Mode: Terang (Klik untuk ganti Gelap)';
+      if (metaThemeColor) metaThemeColor.setAttribute('content', '#f8fafc');
     }
-    localStorage.setItem('selayar_bisa_theme', theme);
+    localStorage.setItem('selayar_bisa_theme', isDark ? 'dark' : 'light');
   };
 
-  // Init Theme
+  // Inisialisasi tema saat pertama kali render (Default: Terang)
   applyTheme(getPreferredTheme());
 
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-  });
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isCurrentlyDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      applyTheme(isCurrentlyDark ? 'light' : 'dark');
+      showToast(`Tema diubah ke Mode ${isCurrentlyDark ? 'Terang' : 'Gelap'}`);
+    });
+  }
 
   // State
   let activeFilter = 'all';
@@ -76,23 +88,27 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Search Input Listener
-  searchInput.addEventListener('input', (e) => {
-    searchQuery = e.target.value;
-    if (searchQuery.length > 0) {
-      clearSearch.classList.remove('hidden');
-    } else {
-      clearSearch.classList.add('hidden');
-    }
-    filterCards();
-  });
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      if (searchQuery.length > 0) {
+        clearSearch?.classList.remove('hidden');
+      } else {
+        clearSearch?.classList.add('hidden');
+      }
+      filterCards();
+    });
+  }
 
-  clearSearch.addEventListener('click', () => {
-    searchInput.value = '';
-    searchQuery = '';
-    clearSearch.classList.add('hidden');
-    searchInput.focus();
-    filterCards();
-  });
+  if (clearSearch) {
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      searchQuery = '';
+      clearSearch.classList.add('hidden');
+      searchInput.focus();
+      filterCards();
+    });
+  }
 
   // Filter Pill Listeners
   filterPills.forEach((pill) => {
@@ -107,12 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Toast Helper
   let toastTimeout;
   const showToast = (message) => {
+    if (!toast) return;
     clearTimeout(toastTimeout);
     toast.textContent = message;
     toast.classList.remove('hidden');
     toastTimeout = setTimeout(() => {
       toast.classList.add('hidden');
-    }, 2500);
+    }, 2200);
   };
 
   // Copy Link Buttons
