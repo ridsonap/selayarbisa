@@ -14,6 +14,7 @@ Dikelola oleh **[@ridsonap](https://github.com/ridsonap)**.
 | **SLS Finder Selayar** | WebGIS & Geospasial | [Buka SLSelayar](https://ridsonap.github.io/SLSelayar/) | [GitHub @ridsonap/SLSelayar](https://github.com/ridsonap/SLSelayar) |
 | **BUMAKO** | Master Komoditas SPDT NTP 2026 | [Buka BUMAKO](https://ridsonap.github.io/bumako/) | [GitHub @ridsonap/bumako](https://github.com/ridsonap/bumako) |
 | **SIPH Sulsel** | Analisis Inflasi & Harga Pangan | [Buka SIPH](https://ridsonap.github.io/siph/) | [GitHub @ridsonap/siph](https://github.com/ridsonap/siph) |
+| **Sampel SPDT** | Pergantian Sampel DSRT 7301 | [sampel-spdt.vercel.app](https://sampel-spdt.vercel.app) | [GitHub @ridsonap/sampel-spdt](https://github.com/ridsonap/sampel-spdt) |
 
 ---
 
